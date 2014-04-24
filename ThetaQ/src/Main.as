@@ -24,8 +24,8 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-            stage.scaleMode = StageScaleMode.NO_SCALE;
-            stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
 			
 			var parameters:Object = loaderInfo.parameters;
 			if (parameters) {
