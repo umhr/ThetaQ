@@ -40,7 +40,6 @@ package
 			
 			addCanvas();
 			
-			
 		}
 		
 		private function addShield():void {
