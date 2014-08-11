@@ -14,13 +14,13 @@ package
 	import flash.geom.Vector3D;
 	import primitives.HemiSphereGeometry;
 
-    public class Earth extends Sprite
-    {
-        private var view3d:View3D;
-        private var mesh:Mesh;
+	public class Earth extends Sprite
+	{
+		private var view3d:View3D;
+		private var mesh:Mesh;
 		private var _texture:BitmapData;
-        public function Earth(texture:BitmapData):void
-        {
+		public function Earth(texture:BitmapData):void
+		{
 			_texture = texture;
 			init();
 		}
@@ -35,13 +35,13 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, onInit);
 			// entry point
 			
-            view3d = new View3D();
-            addChild(view3d);
+			view3d = new View3D();
+			addChild(view3d);
 			
 			add(_texture);
 			view3d.camera.z = -550;
 			
-        }
+		}
 		
 		public function add(bitmapData:BitmapData):void {
 			var targetSize:int = 2;
@@ -54,8 +54,8 @@ package
 			var texture:BitmapData = new BitmapData(targetSize, targetSize, false, 0x0);
 			texture.drawWithQuality(bitmapData, new Matrix(targetSize / bitmapData.width, 0, 0, targetSize / bitmapData.height), null, null, null, true, StageQuality.HIGH_16X16);
 			
-            var ts:Texture2DBase = new BitmapTexture(texture);
-            var material:TextureMaterial = new TextureMaterial(ts);
+			var ts:Texture2DBase = new BitmapTexture(texture);
+			var material:TextureMaterial = new TextureMaterial(ts);
 			var geometry:HemiSphereGeometry = new HemiSphereGeometry(450, 64, 64);
 			if (mesh) {
 				mesh.material = null;
@@ -65,19 +65,19 @@ package
 			while (view3d.scene.numChildren > 0) {
 				view3d.scene.removeChildAt(0);
 			}
-            view3d.scene.addChild(mesh);
-			
+			view3d.scene.addChild(mesh);
+			resetPosition(0, 0, -550);
 		}
 		
 		
 		private var _rX:Number = 0;
 		private var _rY:Number = 0;
 		
-        public function resize():void
-        {
-            view3d.width = stage.stageWidth;
-            view3d.height = stage.stageHeight;
-        }
+		public function resize():void
+		{
+			view3d.width = stage.stageWidth;
+			view3d.height = stage.stageHeight;
+		}
 
 		public function render():void {
 			view3d.render();
@@ -107,9 +107,18 @@ package
 		public function set rY(value:Number):void 
 		{
 			var matrix3D:Matrix3D = mesh.transform;
-			matrix3D.appendRotation(value-_rY, new Vector3D(0, 1, 0, 0));
+			//matrix3D.appendRotation(value-_rY, new Vector3D(0, 1, 0, 0));
+			var rad: Number = _rX * Math.PI / 180;
+			matrix3D.appendRotation(value-_rY, new Vector3D(0, Math.cos(rad), Math.sin(rad), 0));
+			
 			mesh.transform = matrix3D;
 			_rY = value;
 		}
-    }
+		
+		public function resetPosition(x: Number, y: Number, z: Number):void{
+			_rX = x;
+			_rY = y;
+			view3d.camera.z = z;
+		}
+	}
 }

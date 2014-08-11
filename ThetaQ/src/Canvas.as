@@ -94,12 +94,9 @@ package
 		
 		private function setBitmapData(bitmapData:BitmapData):void 
 		{
-			
 			_earth = new Earth(bitmapData);
 			addChild(_earth);
-			//_earth.rX = _position.x = 0;
-			_earth.rY = _position.y = -90;
-			//_earth.zoom = _position.z = -550;
+			resetPosition();
 			
 			addButtons();
 			
@@ -134,9 +131,12 @@ package
 		
 		private function fetchFile_complete(e:Event):void 
 		{
+			
 			if (_fetchFile.content == "[object Bitmap]") {
 				var bitmap:Bitmap = _fetchFile.content as Bitmap;
 				_earth.add(bitmap.bitmapData);
+				
+				resetPosition();
 			}
 		}
 		
@@ -145,6 +145,13 @@ package
 			_earth.resize();
 			_buttonBase.x = stage.stageWidth - _buttonBase.width-16;
 			_buttonBase.y = stage.stageHeight - _buttonBase.height-16;
+		}
+		
+		private function resetPosition():void {
+			_position.x = 0;
+			_position.y = 0;
+			_position.z = -550;
+			_earth.resetPosition(_position.x, _position.y, _position.z);
 		}
 		
 		private var _position:Vector3D = new Vector3D(0, -90, -550);
@@ -169,6 +176,7 @@ package
 		private function stage_mouseWheel(event:MouseEvent):void 
 		{
 			_position.z = Math.max( -1400, Math.min(400, _earth.zoom + event.delta * 50));
+			_count = -100;
 		}
 		
 		private function onButton(event:MouseEvent):void 
@@ -188,9 +196,7 @@ package
 			}else if (label == "down") {
 				_position.x = _earth.rX - 30;
 			}else if (label == "Home") {
-				_position.x = 0;
-				_position.y = 0;
-				_position.z = -550;
+				resetPosition();
 			}else if (label == "upload") {
 				_fetchFile.start([new FileFilter("Images(*.jpg;*.gif;*.png)", "*.jpg;*.gif;*.png")]);
 			}else if (label == "expand") {
